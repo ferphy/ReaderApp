@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.firebase.services)
     kotlin("kapt")
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.dagger.hilt)
 }
 
 android {

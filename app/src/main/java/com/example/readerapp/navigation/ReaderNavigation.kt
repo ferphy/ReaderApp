@@ -1,7 +1,6 @@
 package com.example.readerapp.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -19,10 +18,12 @@ fun ReaderNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = HomeScreenRoute
+        startDestination = SplashScreenRoute
     ) {
         composable<SplashScreenRoute> {
-            SplashScreen()
+            SplashScreen(
+                navController = navController
+            )
         }
         composable<HomeScreenRoute> {
             HomeScreen()
