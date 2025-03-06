@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.firebase.services)
+    kotlin("kapt")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -49,6 +52,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.firebase.firestore.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -56,4 +60,39 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    //firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth)
+    // Retrofit
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.gson)
+    implementation(libs.retrofit.coroutines.adapter)
+    // OkHttp (opcional para logs de red)
+    implementation(libs.okhttp.logging)
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+    // Coil (uso general)
+    implementation(libs.coil)
+    // Coil para Jetpack Compose
+    implementation(libs.coil.compose)
+    // Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    // Hilt para Jetpack Compose (opcional)
+    implementation(libs.hilt.navigation.compose)
+    //navegation
+    implementation (libs.ui)
+    implementation (libs.androidx.material)
+    implementation (libs.androidx.navigation.compose)
+    //Iconos
+    implementation(libs.material3)
+    implementation(libs.androidx.material.icons.extended)
+    //ROOM
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.kotlinx.serialization.json)
+
 }
