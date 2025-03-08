@@ -22,3 +22,6 @@ data object UpdateScreenRoute{}
 
 @Serializable
 data object SplashScreenRoute{}
+
+@Serializable
+data object SignUpScreenRoute{}

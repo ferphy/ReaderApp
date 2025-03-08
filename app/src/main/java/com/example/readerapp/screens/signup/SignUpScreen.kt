@@ -1,7 +1,10 @@
-package com.example.readerapp.screens.login
+package com.example.readerapp.screens.signup
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.ScrollableState
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,13 +12,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -35,31 +39,36 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.readerapp.navigation.HomeScreenRoute
 import com.example.readerapp.navigation.SignUpScreenRoute
-import org.checkerframework.checker.units.qual.Current
+import com.example.readerapp.screens.login.LoginViewModel
+import com.example.readerapp.screens.login.SignInStates
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun SignUpScreen(navController: NavHostController) {
 
-    val viewModel : LoginViewModel = hiltViewModel()
+    val viewModel : SignUpViewModel = hiltViewModel()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
+
     val uiState = viewModel.state.collectAsState()
 
     val context = LocalContext.current
     LaunchedEffect(key1 = uiState.value){
         when(uiState.value){
-            SignInStates.Success ->{
+            SignUpStates.Success ->{
                 navController.navigate(HomeScreenRoute)
             }
-            SignInStates.Error->{
+            SignUpStates.Error->{
                 email = ""
                 password = ""
+                name = ""
+                confirmPassword = ""
                 Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
             }
             else -> {}
@@ -78,13 +87,14 @@ fun LoginScreen(navController: NavHostController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues),
+                    .padding(paddingValues)
+                    .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Top
+                verticalArrangement = Arrangement.Top,
             ) {
                 Spacer(modifier = Modifier.height(40.dp))
                 Text(
-                    text = "Log In",
+                    text = "Sign Up",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
@@ -109,12 +119,27 @@ fun LoginScreen(navController: NavHostController) {
                         )
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text = "Please log in to access your account and continue your reading journey.",
+                            text = "Please Sign Up to access and start your reading journey.",
                             style = MaterialTheme.typography.bodySmall,
                             fontWeight = FontWeight.Normal,
                             color = Color.Black
                         )
                         Spacer(modifier = Modifier.height(30.dp))
+                        Text(
+                            text = "Name",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+                        OutlinedTextField(
+                            value = name,
+                            onValueChange = { name = it },
+                            placeholder = { Text(text = "Enter your Name") },
+                            modifier = Modifier
+                                .width(322.dp)
+                                .background(Color(0xFFf3e9b5)),
+                        )
+                        Spacer(modifier = Modifier.height(20.dp))
                         Text(
                             text = "Email",
                             style = MaterialTheme.typography.titleMedium,
@@ -146,19 +171,36 @@ fun LoginScreen(navController: NavHostController) {
                                 .background(Color(0xFFf3e9b5)),
                             visualTransformation = PasswordVisualTransformation()
                         )
+                        Spacer(modifier = Modifier.height(20.dp))
+                        Text(
+                            text = "Confirm your Password",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+                        OutlinedTextField(
+                            value = confirmPassword,
+                            onValueChange = { confirmPassword = it },
+                            placeholder = { Text(text = "Enter your Password") },
+                            modifier = Modifier
+                                .width(322.dp)
+                                .background(Color(0xFFf3e9b5)),
+                            visualTransformation = PasswordVisualTransformation(),
+                            isError = password.isNotEmpty() && confirmPassword.isNotEmpty() && password != confirmPassword
+                        )
                         Spacer(modifier = Modifier.height(10.dp))
 
                         TextButton(
                             modifier = Modifier.align(Alignment.CenterHorizontally),
                             onClick = {
-                                navController.navigate(SignUpScreenRoute)
+                                navController.popBackStack()
                             },
                         ) {
-                            Text(text = "Don't have an account? Sign Up")
+                            Text(text = "Already have an account? Log In")
                         }
 
                         Spacer(modifier = Modifier.height(10.dp))
-                        if(uiState.value == SignInStates.Loading){
+                        if(uiState.value == SignUpStates.Loading){
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.Center
@@ -166,7 +208,7 @@ fun LoginScreen(navController: NavHostController) {
                                 CircularProgressIndicator()
                             }
 
-                        }else if(uiState.value == SignInStates.Loading){
+                        }else if(uiState.value == SignUpStates.Loading){
                             Text(
                                 text = "Error",
                                 color = Color(0xFFe95322)
@@ -175,7 +217,7 @@ fun LoginScreen(navController: NavHostController) {
 
                         Button(
                             onClick = {
-                                viewModel.singIn(email, password)
+                                viewModel.signUp(email, password, name)
                             },
                             modifier = Modifier
                                 .height(45.dp)
@@ -183,9 +225,9 @@ fun LoginScreen(navController: NavHostController) {
                                 .align(Alignment.CenterHorizontally),
                             shape = RoundedCornerShape(30.dp),
                             colors = ButtonDefaults.buttonColors(Color(0xFFe95322)),
-                            enabled = email.isNotEmpty() && password.isNotEmpty() && uiState.value == SignInStates.Nothing || uiState.value == SignInStates.Error
+                            enabled = name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && confirmPassword.isNotEmpty()
                         ){
-                            Text(text = "Log In")
+                            Text(text = "Sign Up")
                         }
 
 

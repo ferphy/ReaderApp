@@ -9,6 +9,7 @@ import com.example.readerapp.screens.details.DetailsScreen
 import com.example.readerapp.screens.home.HomeScreen
 import com.example.readerapp.screens.login.LoginScreen
 import com.example.readerapp.screens.search.SearchScreen
+import com.example.readerapp.screens.signup.SignUpScreen
 import com.example.readerapp.screens.stats.StatsScreen
 import com.example.readerapp.screens.update.UpdateScreen
 
@@ -32,8 +33,16 @@ fun ReaderNavigation() {
             DetailsScreen()
         }
         composable<LoginScreenRoute> {
-            LoginScreen()
+            LoginScreen(
+                navController = navController
+            )
         }
+        composable<SignUpScreenRoute> {
+            SignUpScreen(
+                navController = navController
+            )
+        }
+
         composable<SearchScreenRoute> {
             SearchScreen()
         }
